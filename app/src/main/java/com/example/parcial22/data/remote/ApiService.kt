@@ -21,5 +21,6 @@ interface ApiService {
     suspend fun createPayment(@Body payment: Payment): Payment
 
     @POST("api/plans")
-    suspend fun createPlan(@Body plan:Plan):Plan
+    suspend fun createPlan(@Body plan: Plan): Plan
 }
+
