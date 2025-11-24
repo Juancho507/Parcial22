@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.parcial22.data.model.Member
 import com.example.parcial22.ui.viewmodel.PlanViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.parcial22.ui.screens.components.DropdownMenuMemberSelector
 import com.example.parcial22.ui.screens.components.GlowButton
 import com.example.parcial22.ui.screens.components.NeonText
 import com.example.parcial22.ui.theme.BackgroundDark
@@ -29,7 +31,7 @@ fun PlanDetailScreen(
 
     var showAddPaymentDialog by remember { mutableStateOf(false) }
     var paymentAmount by remember { mutableStateOf("") }
-    var selectedMemberId by remember { mutableStateOf("") }
+    var selectedMember by remember { mutableStateOf<Member?>(null) }
 
     LaunchedEffect(planId) {
         println("PLAN ID RECIBIDO → $planId")
@@ -153,15 +155,15 @@ fun PlanDetailScreen(
                 GlowButton(
                     text = "Guardar Pago",
                     onClick = {
-                        if (paymentAmount.isNotBlank() && selectedMemberId.isNotBlank()) {
+                        if (paymentAmount.isNotBlank() && selectedMember != null) {
                             viewModel.addPaymentToPlan(
                                 amount = paymentAmount.toInt(),
                                 planId = planId,
-                                memberId = selectedMemberId
+                                memberId = selectedMember!!.id!!
                             )
                         }
                         paymentAmount = ""
-                        selectedMemberId = ""
+                        selectedMember = null
                         showAddPaymentDialog = false
                     }
                 )
@@ -185,15 +187,11 @@ fun PlanDetailScreen(
 
                     NeonText("Selecciona un miembro:")
 
-                    members.forEach { member ->
-                        Row {
-                            RadioButton(
-                                selected = selectedMemberId == member.id,
-                                onClick = { selectedMemberId = member.id ?: "" }
-                            )
-                            Text(member.name, color = PurpleNeon)
-                        }
-                    }
+                    DropdownMenuMemberSelector(
+                        members = members,
+                        selectedMember = selectedMember,
+                        onMemberSelected = { selectedMember = it }
+                    )
                 }
             }
         )

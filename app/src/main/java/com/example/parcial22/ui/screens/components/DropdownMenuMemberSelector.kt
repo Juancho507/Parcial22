@@ -1,41 +1,39 @@
 package com.example.parcial22.ui.screens.components
 
-import com.example.parcial22.data.model.Plan
-import com.example.parcial22.data.remote.ApiService
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import com.example.parcial22.data.model.Member
 
-class PlanRepositoryTest {
+@Composable
+fun DropdownMenuMemberSelector(
+    members: List<Member>,
+    selectedMember: Member?,
+    onMemberSelected: (Member) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
 
-    @Mock
-    private lateinit var apiService: ApiService
+    Box(modifier = Modifier.fillMaxWidth()) {
+        TextButton(onClick = { expanded = true }) {
+            Text(text = selectedMember?.name ?: "Select a member")
+        }
 
-    private lateinit var planRepository: PlanRepository
-
-    @Before
-    fun setUp() {
-        MockitoAnnotations.openMocks(this)
-        planRepository = PlanRepository(apiService)
-    }
-
-    @Test
-    fun getPlans_returnsPlans() = runBlocking {
-        // Given
-        val expectedPlans = listOf(
-            Plan("1", "Plan 1", "Motive 1", 100, 1),
-            Plan("2", "Plan 2", "Motive 2", 200, 2)
-        )
-        `when`(apiService.getPlans()).thenReturn(expectedPlans)
-
-        // When
-        val result = planRepository.getPlans()
-
-        // Then
-        assertEquals(expectedPlans, result)
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            members.forEach { member ->
+                DropdownMenuItem(onClick = {
+                    onMemberSelected(member)
+                    expanded = false
+                }, text = { Text(text = member.name) })
+            }
+        }
     }
 }

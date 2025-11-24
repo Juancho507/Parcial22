@@ -4,11 +4,8 @@ import com.example.parcial22.data.model.Member
 import com.example.parcial22.data.model.Payment
 import com.example.parcial22.data.model.Plan
 import com.example.parcial22.data.remote.ApiService
-import com.example.parcial22.data.remote.RetrofitClient
 
-class PlanRepository {
-
-    private val api = RetrofitClient.instance.create(ApiService::class.java)
+class PlanRepository(private val api: ApiService) {
 
     suspend fun getPlans() = api.getPlans()
     suspend fun getMembers(planId: String) = api.getMembersByPlan(planId)

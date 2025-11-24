@@ -20,7 +20,7 @@ import com.example.parcial22.ui.screens.components.GlowButton
 import com.example.parcial22.ui.screens.components.NeonText
 import com.example.parcial22.ui.theme.GlowBlue
 
-import com.example.parcial2.ui.theme.CardDark
+import com.example.parcial22.ui.theme.CardDark
 
 @Composable
 fun PlanListScreen(
